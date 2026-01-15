@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Circular Carousel</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ffffff;
+        perspective: 40em;
+        overflow: hidden;
+    }
+
+    .carousel {
+        width: 25em;
+        height: 25em;
+        position: relative;
+        transform-style: preserve-3d;
+    }
+    /* Prevent accidental text/image selection */
+    .carousel, 
+    .carousel * {
+        user-select: none;         /* Standard browsers */
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none;    /* Firefox */
+        -ms-user-select: none;     /* IE/Edge */
+    }
+
+    /* Each image wrapper rotates around circle */
+    .item {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform-style: preserve-3d;
+    }
+
+    /* Actual image stays facing the camera */
+    .item img {
+        max-width: 15em;
+        max-height: 10em;
+        transform-style: preserve-3d;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        object-fit: contain;
+    }
+
+    /* Debug panel */
+    .debug {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0.1);
+        padding: 10px;
+        display: flex;
+        gap: 1em;
+        justify-content: center;
+        backdrop-filter: blur(8px);
+        flex-wrap: wrap;
+    }
+
+    .value-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="carousel">
+    <!-- wrappers will be created in JS -->
+</div>
+
+<div class="debug">
+    <div class="value-container">
+        <label>Value:</label>
+        <span id="valDisplay">0.0000</span>
+    </div>
+    <div class="buttons-container" id="buttons"></div>
+    <div class="value-container">
+        <label>Debug:</label>
+        <span id="debugOutput">None</span>
+    </div>
+</div>
+
+<script>
+    const carousel = document.querySelector('.carousel');
+    const imageList = [
+        "images/actions_photo_1.jpeg",
+        "images/actions_photo_2.jpeg",
+        "images/actions_photo_3.jpeg",
+        "images/actions_photo_4.jpeg",
+        "images/actions_photo_5.jpeg",
+        "images/actions_photo_6.jpeg",
+        "images/actions_photo_7.jpeg",
+    ];
+
+    // create wrappers so images can face camera
+    imageList.forEach(src => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "item";
+
+        const img = document.createElement("img");
+        img.src = src;
+        wrapper.appendChild(img);
+        carousel.appendChild(wrapper);
+    });
+
+    const items = document.querySelectorAll('.item');
+    const total = items.length;
+    const radius = 20; // circle radius in em
+
+    // --- Attach click listener to each item (runs once) ---
+    items.forEach((item, index) => {
+        item.addEventListener("click", () => {
+            let i = total - index;
+            animateTo(i);
+            debugOutput.textContent = `Clicked index: ${i}`;
+        });
+    });
+
+    let currentVal = 0; // continuous numeric value
+
+    function placeItems_perFrame(globalRotationDeg = 0) {
+        items.forEach((item, i) => {
+            const angle = (360 / total) * i + globalRotationDeg;
+            const rad = angle * Math.PI / 180;
+
+            const x = Math.sin(rad) * radius;
+            const z = Math.cos(rad) * radius;
+
+            // wrapper rotates around circle
+            item.style.transform =
+                `translate3d(${x}em, 4em, ${-z}em) rotateY(${angle}deg)`;
+
+            // image faces camera
+            const img = item.children[0];
+            img.style.transform =
+                `translate(-50%, -10%) rotateY(${-angle}deg)`;
+
+            // -------------------------------
+            // OPACITY BASED ON Z DISTANCE
+            // z ranges approx from -radius (front) to +radius (back)
+            // Normalize to 0..1
+            const normalized = (z + radius) / (2 * radius);
+
+            // compute final opacity
+            // back image ~= 0.2, front image = 1
+            const opacity = 1 - normalized * 0.8;
+
+            img.style.opacity = opacity.toFixed(2);
+            // -------------------------------
+        });
+    }
+
+
+    const valDisplay  = document.getElementById("valDisplay");
+    const debugOutput = document.getElementById("debugOutput");
+
+    const anglePerImage = 360 / imageList.length;
+
+    function update() {
+        valDisplay.textContent = currentVal.toFixed(4);
+        const rotation = currentVal * anglePerImage + 180;
+        placeItems_perFrame(rotation);
+    }
+
+    placeItems_perFrame();
+
+    // --- Animation Logic ---
+    let animationId = null;
+
+    function animateTo(targetIndex) {
+        // Based on code from Gemini
+        
+        // Calculate the raw difference relative to the current modulus
+        // logic: target - (current % total) gives distance within one cycle
+        // We use a helper to get a positive modulo for safety
+        const mod = (n, m) => ((n % m) + m) % m;
+        const currentMod = mod(currentVal, total);
+
+        let diff = targetIndex - currentMod;
+
+        // Shortest Path Logic (The "Wrap Around")
+        // If distance is greater than half the circle, go the other way
+        if (diff > total / 2) {
+            diff -= total;
+        } else if (diff < -total / 2) {
+            diff += total;
+        }
+
+        // Calculate final destination value
+        const startVal = currentVal;
+        const endVal = currentVal + diff;
+
+        // Animation Loop (Custom implementation for total control)
+        const duration = 600; // ms
+        const startTime = performance.now();
+
+        if (animationId) cancelAnimationFrame(animationId);
+
+        function frame(time) {
+            const elapsed = time - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Cubic Ease Out function: 1 - (1-t)^3
+            // Feels snappier than linear, similar to glassmorphism physics
+            const ease = 1 - Math.pow(1 - progress, 3);
+
+            currentVal = startVal + (diff * ease);
+
+            update(); // Update the DOM
+
+            if (progress < 1) {
+                animationId = requestAnimationFrame(frame);
+            }
+        }
+
+        animationId = requestAnimationFrame(frame);
+    }
+
+    let mouseInsideCarousel = false; // FIXME: There's a bug — there's an invisible box.
+    // Detect when mouse enters the carousel area
+    carousel.addEventListener("mouseenter", () => {
+        mouseInsideCarousel = true;
+        debugOutput.textContent = "Mouse inside carousel";
+    });
+    // Detect when mouse leaves the carousel area
+    carousel.addEventListener("mouseleave", () => {
+        mouseInsideCarousel = false;
+        debugOutput.textContent = "Mouse outside carousel";
+    });
+
+    // --- Auto-switch to lower index every 3 seconds ---
+    setInterval(() => {
+        // current index modulo total
+        const currentIndex = Math.round(currentVal) % total;
+
+        // next index = one lower, wrap around
+        let nextIndex = currentIndex - 1;
+        if (nextIndex < 0) nextIndex += total;
+
+        if (!mouseInsideCarousel) {
+            animateTo(nextIndex);
+        }
+    }, 3000);
+
+    // --- Create debug buttons for each image ---
+    const buttonsContainer = document.getElementById("buttons");
+    imageList.forEach((_, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = index;
+        btn.onclick = () => animateTo(index);
+        buttonsContainer.appendChild(btn);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    .menu-btn {
+        width: 80px;
+        height: 80px;
+        background: lightgray;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    .menu-btn.active .line1 {
+        transform: rotate(-45deg) translateX(-20px) translateY(21px);
+    }
+    .menu-btn.active .line2 {
+        opacity: 0;
+    }
+    .menu-btn.active .line3 {
+        transform: rotate(45deg) translateX(9px) translateY(-31px);
+    }
+
+    svg {
+        width: 40px;
+        height: 40px;
+    }
+    .line {
+        fill: none;
+        stroke: #000;
+        stroke-width: 5;
+        stroke-linecap: round;
+        transition: all 0.4s ease;
+    }
+</style>
+</head>
+<body>
+
+<button class="menu-btn">
+    <svg viewBox="0 0 40 40">
+        <line class="line line1" x1="5" y1="8" x2="35" y2="8"/>
+        <line class="line line2" x1="5" y1="20" x2="35" y2="20"/>
+        <line class="line line3" x1="5" y1="32" x2="35" y2="32"/>
+    </svg>
+</button>
+
+<script>
+    const b = document.querySelector('.menu-btn');
+    b.addEventListener('click', () => {
+        b.classList.toggle('active');
+    });
+</script>
+
+</body>
+</html>

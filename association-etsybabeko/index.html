@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!--
+Developed by Manda Rajoelisolo
+LinkedIn: https://www.linkedin.com/in/manda-rajoelisolo-972a37344/
+-->
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Title shown in browser tab and Google search -->
+<title>Association Etsy Babeko</title>
+
+<!-- Description shown in Google search -->
+<meta name="description" content="L'association Etsy Babeko est une association à but non lucratif pour aider les enfants malgaches.">
+
+<!-- Optional: help Google index the site -->
+<meta name="robots" content="index, follow">
+
+<style>
+    /* FIX horizontal overflow
+    This removes any accidental horizontal expansion from ANY element (hero, nav, header, anything). */
+    html, body {
+        overflow-x: hidden;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+        background-color: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(25px);
+        color: #333;
+        padding: 0; /* No padding, so items align cleanly with elements outside the header (e.g., the menu button) */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        transition: transform 0.3s ease-in-out;
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: flex-start;
+        gap: 2rem;
+        min-height: 70px;
+    }
+    header.hidden {
+        transform: translateY(-100%);
+    }
+    .header-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        flex: 1;
+        margin-left: 1rem;
+    }
+    header h1 {
+        margin: 0;
+        letter-spacing: 0.2em;
+        font-size: 1.32em;
+    }
+    header h1 .etsy-babeko {
+        color: #366651;
+        font-weight: bold;
+        font-size: 24.84px;
+    }
+    nav {
+        display: flex;
+        justify-content: space-between;
+        width: 49rem;
+        max-width: 75vw;
+        flex-wrap: nowrap;       /* prevents the whole row from wrapping */
+        overflow-x: auto;        /* on very small screens --> horizontal scroll instead of break */
+        white-space: nowrap;     /* very important – forces children to stay in one line */
+        padding: 0.5rem 0;       /* optional: a little breathing room */
+        scrollbar-width: thin;   /* Firefox – nice thin scrollbar */
+    }
+    nav a {
+        color: #333;
+        text-decoration: none;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+        font-size: 0.9em;
+    }
+    nav a:hover,
+    nav a.active {
+        background-color: rgba(0, 0, 0, 0.1);
+        color: #366651;
+    }
+
+    /* Menu button */
+    header  .menu-btn,
+    .sidebar-menu-btn {
+        top: 0px;
+        right: 0px;
+        width: 80px;
+        height: 80px;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    header .menu-btn {
+        background-color: rgba(0, 0, 0, 0);
+        position: absolute; /* absolute inside header */
+    }
+    .sidebar-menu-btn {
+        background-color: white;
+        position: fixed; /* fixed on screen */
+        z-index: 3000; /* above sidebar (2000) */
+
+        visibility: hidden;
+        /*background-color: red;*/
+    }
+        /* Animation */
+        header  .menu-btn .line,
+        .sidebar-menu-btn .line {
+            transition: all 0.4s ease;
+        }
+            header  .menu-btn.active .line1,
+            .sidebar-menu-btn.active .line1 {
+                transform: rotate(-45deg) translateX(-20px) translateY(21px);
+            }
+            header  .menu-btn.active .line2,
+            .sidebar-menu-btn.active .line2 {
+                opacity: 0;
+            }
+            header  .menu-btn.active .line3,
+            .sidebar-menu-btn.active .line3 {
+                transform: rotate(45deg) translateX(9px) translateY(-31px);
+            }
+        .sidebar-menu-btn.active {
+            visibility: visible;
+        }
+
+    /* Sidebar */
+    #sidebar {
+        font-size: 1.5em;
+        position: fixed;
+        top: 0;
+        right: -50vw; /* 0px = visible */
+        width:  100vw;
+        height: 100%;
+        background-color: #366651;
+        transition: right 0.4s ease;
+        z-index: 2000; /* higher than header */
+        padding: 2em;
+        padding-top: 25vw;
+        box-sizing: border-box;
+
+        transition: right 0.4s ease, opacity 0.35s ease;
+        opacity: 0;
+        pointer-events: none; /* cannot click through when hidden */
+    }
+    #sidebar.active {
+        right: 0; /* slide into view */
+        opacity: 1;
+        pointer-events: auto; /* can click links now */
+    }
+    #sidebar nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    #sidebar nav a {
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+        font-size: 1.1em;
+        transition: color 0.3s;
+    }
+    #sidebar nav a.active {
+        background-color: rgba(0, 0, 0, 0) !important;
+        color: black !important;
+    }
+
+    /* Main, ... */
+    main {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+        padding-top: 70px;
+        transition: padding-top 0.3s ease-in-out;
+    }
+    .tab-content {
+        display: none;
+        position: relative;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    .hero {
+        position: relative;
+        width: 100vw;
+        height: 18em; /* taller, controls bottom Y */
+        margin-left: -50vw;
+        margin-right: -50vw;
+        left: 50%;
+        right: 50%;
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+    #home .hero {
+        height: 30em;
+    }
+    #contribute .hero {
+        height: 14.5em;
+    }
+    .hero-link {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 0;
+        cursor: default;
+    }
+    .hero-img {
+        width: 100%;
+        height: 100%;
+        min-width: 1000px;
+        object-fit: cover;
+        display: block;
+    }
+    #home .hero-img {
+        object-position: center 60%;
+    }
+    #history .hero-img {
+        object-position: center 30%;
+    }
+    #actions .hero-img {
+        object-position: center 20%;
+    }
+    #contribute .hero-img {
+        object-position: center 20%;
+    }
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+        z-index: 1;
+        pointer-events: none;
+        padding-left: 10%;
+    }
+    .hero-text {
+        font-size: 3.6em;
+        max-width: 80vw;
+        color: white;
+        letter-spacing: normal;
+        font-family: 'Calibri', sans-serif;
+        text-align: left;
+        margin: 0;
+        font-weight: bold;
+        transform: translateX(100px);
+        opacity: 0;
+        white-space: pre-line;
+        padding-bottom: 3rem;
+    }
+    #home .hero-text {
+        font-family: 'Calibri Light', Calibri, sans-serif;
+        font-size: 6em;
+    }
+    .hero-text.animate {
+        animation: slideInRight 1s ease-out forwards;
+    }
+    @keyframes slideInRight {
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    .lorem-section {
+        margin-bottom: 2rem;
+        line-height: 1.3;
+    }
+    .lorem-section-title {
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 2.7em;
+        line-height: 1.1;
+    }
+
+    /* ... */
+    .logo {
+        height: calc(100% - 0.5rem);
+        width: auto;
+        flex-shrink: 0;
+        margin: 0.25rem 0;
+        margin-top: 0.75em;
+        margin-bottom: 0.75em;
+        margin-left: 2rem;
+    }
+    .icon {
+        margin-right: 0.5em;
+    }
+
+    .fb-link, .fb-link img {
+        cursor: pointer;
+    }
+
+    @media (min-width: 769px) { /* Desktop (>= 768px + 1px) */
+        header .title_desktop {
+            display: block;
+        }
+        header .title_mobile {
+            display: none;
+        }
+        header .menu-btn {
+            display: none;
+        }
+    }
+    @media (max-width: 768px) { /* Mobile (<= 768px) */
+        .logo {
+            margin: 1.5rem 0.75rem;
+        }
+        header .title_desktop {
+            display: none;
+        }
+        header .title_mobile {
+            display: block;
+            position: absolute; /* remove from normal flex flow */
+            left: 50%;          /* horizontal center of viewport */
+            top: 50%;           /* vertical center */
+            transform: translate(-50%, -50%); /* shift by half width & height */
+            text-align: center;
+            margin: 0;
+        }
+        header nav {
+            display: none;
+        };
+        header .menu-btn {
+            display: flex;
+        }
+
+        .hero {
+            height: 16em; /* for history, actions, contribute */
+            position: relative; /* for any overlays */
+            overflow: hidden;   /* optional if you want to crop minimal overflow */
+        }
+        #home .hero {
+            height: 18em;
+        }
+        .hero-img {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70%;
+            min-width: unset;
+            object-fit: cover;
+            object-position: bottom;
+            display: block;
+        }
+
+        .hero-text {
+            padding-bottom: 1rem;
+        }
+        #home .hero-text {
+            font-size: 2.5em !important;
+            max-width: 90vw;
+        }
+        #history .hero-text {
+            font-size: 2.75em !important;
+            max-width: 60%;
+            line-height: 1.1;
+            padding-bottom: 2.2rem;
+        }
+        #actions .hero-text {
+            font-size: 3.2em !important;
+            padding-bottom: 2.3rem;
+        }
+        #contribute .hero-text {
+            font-size: 2.4em !important;
+            max-width: 80%;
+            line-height: 1.1;
+            padding-bottom: 0.5rem;
+        }
+
+        .lorem-section-title {
+            font-size: 2.5rem;
+        }
+
+        .desktop-only {
+            display: none !important;
+        }
+    }
+</style>
+</head>
+
+
+<body>
+<!--=============================================================================================-->
+
+<!-- Arrow symbol -->
+<svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;">
+    <defs>
+        <symbol id="arrow-right-stroke" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">
+            <line x1="5" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="13 7 19 12 13 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+    </defs>
+</svg>
+
+
+<!--================================================================================================
+Header Section
+=================================================================================================-->
+
+<header id="header">
+    <img src="images/logo_2022-08-28.png" alt="Association ETSY BABEKO Logo" class="logo">
+
+    <div class="header-content">
+        <div class="title_desktop">
+            <div style="font-size: 0.5em;"><br></div>
+            <h1>Association <span class="etsy-babeko">ETSY BABEKO</span></h1>
+        </div>
+        <div class="title_mobile">
+            <h1>Association<br><span class="etsy-babeko">ETSY BABEKO</span></h1>
+        </div>
+        <nav>
+            <!--
+                Live Server and GitHub Pages only load real files.
+                Clean paths like /xxx will break.
+
+                The simplest universal fix is to use hash URLs (#/xxx).
+                Hash routing never breaks and is handled by JavaScript.
+            -->
+            <a href="#/"                  data-tab="home" class="active">Accueil</a>
+            <a href="#/un-peu-d-histoire" data-tab="history">Un peu d'histoire</a>
+            <a href="#/nos-actions"       data-tab="actions">Nos actions</a>
+            <a href="#/je-contribue"      data-tab="contribute">Je contribue</a>
+        </nav>
+    </div>
+
+    <!-- Menu toggle button -->
+    <button class="menu-btn">
+        <svg viewBox="0 0 40 40" width="40" height="40">
+            <line class="line line1" x1="5" y1="8"  x2="35" y2="8"  stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <line class="line line2" x1="5" y1="20" x2="35" y2="20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <line class="line line3" x1="5" y1="32" x2="35" y2="32" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+    </button>
+</header>
+
+
+<!--================================================================================================
+Right sidebar
+=================================================================================================-->
+
+<div id="sidebar">
+    <nav>
+        <a href="#/"                  data-tab="home">Accueil</a>
+        <a href="#/un-peu-d-histoire" data-tab="history">Un peu d'histoire</a>
+        <a href="#/nos-actions"       data-tab="actions">Nos actions</a>
+        <a href="#/je-contribue"      data-tab="contribute">Je contribue</a>
+    </nav>
+</div>
+
+<button class="sidebar-menu-btn">
+    <svg viewBox="0 0 40 40" width="40" height="40">
+        <line class="line line1" x1="5" y1="8"  x2="35" y2="8"  stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <line class="line line2" x1="5" y1="20" x2="35" y2="20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <line class="line line3" x1="5" y1="32" x2="35" y2="32" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+</button>
+
+
+<!--================================================================================================
+Main - Page Contents (Tab Sections)
+=================================================================================================-->
+
+<main>
+    <!-- ================================================== Home ================================================== -->
+    <div id="home" class="tab-content active">
+        <div class="hero">
+            <img src="images/cover.png" alt="Home cover" class="hero-img">
+            <div class="hero-overlay">
+                <h2 class="hero-text animate" style="font-size: 5.0em; line-height: 1.0; margin-top: 1.3em;">Pour la dignité des enfants<br>à Madagascar</h2>
+            </div>
+        </div>
+        <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.3em;">
+            <div class="lorem-section-title">
+                Notre association
+            </div>
+
+            <p>Née de la volonté de quelques originaires et des amis de Madagascar; cette association à vocation humanitaire et d'intérêt général a pour objet :</p>
+            <ul>
+                <li>De mettre en place le parrainage d'enfants malgaches de milieux défavorisés de la capitale Antananarivo, et éventuellement d'autres villes de Madagascar.</li>
+                <li>De promouvoir et de soutenir à Madagascar les actions de développement dans les secteurs de l'éducation et de la santé ainsi que de la nutrition.</li>
+                <li>En priorité, de venir en aide chaque fois qu'il sera possible à l'enfance en détresse.</li>
+            </ul>
+        </section>
+
+        <!-- 2022 | 100% | Neme -->
+        <style>
+            .items {
+                display: flex;
+                justify-content: space-between; /* keeps 3 columns nicely spaced */
+                margin: 0 5em;
+            }
+            .big {
+                font-family: "Arial Black", Arial, sans-serif;
+                color: #366651;
+                font-weight: bold;
+                font-size: 2.5em;
+            }
+            .small {
+                font-family: 'Calibri Light', Calibri, sans-serif;
+                font-weight: bold;
+                font-size: 1.3em;
+            }
+
+            @media (max-width: 768px) { /* Mobile (<= 768px) */
+                .items {
+                    flex-direction: column;
+                    margin: 2rem;
+                }
+
+                .items p {
+                    margin: 0.5rem;
+                    padding: 0rem 0;
+                    line-height: 1.2;
+                }
+            }
+        </style>
+        <div class="items">
+            <div>
+                <p>
+                    <span class="big">2022<br></span>
+                    <span class="small">Notre année de création</span>
+                </p>
+            </div>
+            <div>
+                <p>
+                    <span class="big">100%<br></span>
+                    <span class="small">Engagés !</span>
+                </p>
+            </div>
+            <div>
+                <p>
+                    <span class="big">4ème<br></span>
+                    <span class="small">Projet en cours !</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Button "En savoir plus" & ... & Button "Je souhaite contribuer"  -->
+        <style>
+            .long-btn {
+                display: flex;              /* act like a full-width block */
+                justify-content: center;    /* center inner elements horizontally */
+                margin: 1rem auto;          /* centers the whole button + nice spacing */
+                position: relative;
+
+                font-size: 1.1em;
+                font-family: 'Calibri Light', Calibri, sans-serif;
+                font-weight: bold;
+            }
+
+            /* This is the long green bar that goes ONLY from screen left --> left edge of the whole button */
+            .long-btn::before {
+                content: "";
+                position: absolute;
+                /* Stretch from far left of viewport to the left border of .long-btn */
+                /*left: -100vw;*/          /* or -999vw if you prefer */
+                right: 100%;           /* ← this is the key: stops exactly at the left side of the button */
+                top: 0;
+                height: 100%;
+                background: #366651;
+                z-index: -1;
+
+                /* JS sets --shadow-offset */
+                box-shadow: var(--shadow-offset, 1000px) 6px 16px rgba(0,0,0,0.5);
+            }
+
+            .btn-main {
+                background-color: #366651;
+                color: white;
+                font-family: 'Calibri Light', Calibri, sans-serif;
+                font-size: 1.3em;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                width: 12.0em;
+                height: 65px; /* pixels for precision - match arrow button height */
+                display: flex; /* center text vertically */
+                align-items: center;
+                justify-content: center;
+            }
+            .btn-main:hover {
+                background-color: #1a4030;
+            }
+
+            .btn-arrow {
+                /*margin-left: 1px;*/
+
+                background-color: #729485;
+                color: white;
+                font-size: 1.5em;
+                width:  65px; /* pixels for precision */
+                height: 65px; /* pixels for precision */
+                padding-left: 0.5em;
+                padding-right: 0.5em;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.3s;
+            }
+            .btn-arrow:hover {
+                background-color: #5b766a;
+            }
+        </style>
+
+        <!-- Car la dignité s’acquiert ... -->
+        <div style="text-align: center; padding: 2rem;">
+            <!-- Desktop only -->
+            <div style="font-family: 'Calibri Light', Calibri, sans-serif;
+                        font-weight: bold;
+                        font-style: italic;
+                        font-size: 1.9em;
+                        text-align: center;
+                        line-height: 1.2; margin: 0;">
+                Car la dignité s’acquiert quant on sait qui on est.<br>
+                Nous accompagnons nos enfants pour devenir eux même !<br>
+                <br>
+            </div>
+            <div class="lorem-section-title">
+                Nos secteurs d’intervention
+            </div>
+            
+            <!-- Photos -->
+            <div class="cards-container">
+                <style>
+                    .cards-container {
+                         display: flex;
+                         justify-content: center;
+                         gap: 2rem;
+                         margin-top: 2rem;
+                    }
+
+                    .card {
+                        position: relative;
+                        display: inline-block;
+                    }
+                    .card img {
+                        width: 275px;
+                        height: auto;
+                        display: block;
+                    }
+                    .overlay {
+                        position: absolute;
+                        bottom: 0;
+                        height: 110px;
+                        text-align: center;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 1.6rem;
+                        padding: 0.3rem 1.5rem 1rem;
+
+                        /* Flex */
+                        display: flex;
+                        flex-direction: column;
+
+                        /* Start with normal height */
+                        height: 105px;
+                        transition: height 0.45s ease;
+                    }
+                    .title {
+                        font-weight: bold;
+                        font-size: 1em;
+                        margin-bottom: 0.4rem;
+                    }
+                    .desc {
+                        font-weight: normal;
+                        font-size: 0.6em;
+                        text-align: left;
+                        line-height: 1.4;
+                    }
+
+                    /* Learn more — completely independent, fixed to bottom of card */
+                    .learn-more {
+                        position: absolute;
+                        bottom: 12px;          /* distance from bottom of the card */
+                        left: 0;
+                        right: 0;
+                        text-align: center;
+                        font-size: 0.6em;
+                        font-weight: 600;
+                        color: white;
+                        
+                        /* Initial hidden state */
+                        opacity: 0;
+                        letter-spacing: 0.5px;
+                        transition: opacity 0.4s ease, transform 0.4s ease;
+                    }
+                    .learn-more a {
+                        color: white;
+                        text-decoration: none;                    /* hide underline by default */
+                        letter-spacing: 0.5px;
+                        transition: letter-spacing 0.35s ease, text-decoration 0.35s ease;
+                        cursor: pointer;
+                    }
+                    .learn-more span {
+                        display: inline-block;
+                        transition: letter-spacing 0.35s ease;
+                    }
+                    .learn-more a:hover {
+                        text-decoration: underline;
+                        letter-spacing: 2.5px;                     /* nice breathing effect */
+                    }
+
+                    /* HOVER: expand overlay + show "Learn more" */
+                    .card:hover .overlay {
+                        height: 155px;              /* expands upward – change this value as you like */
+                    }
+                    .card:hover .learn-more {
+                        opacity: 1;
+                    }
+                    .learn-more a:hover {
+                        text-decoration: underline;
+                        letter-spacing: 2.0px;                     /* nice breathing effect */
+                    }
+
+                    @media (max-width: 768px) { /* Mobile (<= 768px) */
+                        .cards-container {
+                            pointer-events: none;
+                            flex-direction: column;  /* Stack cards vertically */
+                            align-items: center;     /* Center them horizontally */
+                            gap: 1rem;               /* Smaller spacing between cards */
+                        }
+                        .card {
+                            display: block;       /* Stack vertically */
+                            width: 90%;           /* Full width on mobile */
+                            margin-bottom: 1rem;  /* Spacing between cards */
+                        }
+                        .card img {
+                            width: 100%;
+                            height: 20rem;
+                            object-fit: cover;
+                            object-position: bottom;
+                            margin-bottom: 6.5rem;
+                        }
+                        
+                        /* Remove overlay background, keep title inside image */
+                        .overlay {
+                            background: transparent !important;
+                            position: absolute;
+                            height: 3em;
+                            bottom: 0;
+                            font-size: 2em;
+                            padding: 0.3rem 1rem;
+                            padding-left: 0;
+                            padding-right: 0;
+                        }
+
+                        .title {
+                            font-size: 2.4rem;
+                            transform: translateY(-5rem);
+                        }
+
+                        .desc {
+                            display: block;
+                            font-size: 1.3rem;
+                            position: static;
+                            margin: -4rem 0rem 1rem 0rem;
+                            color: black;
+                            text-align: justify;
+                        }
+                    }
+                </style>
+
+                <!-- Image 1 -->
+                <div class="card">
+                    <img src="images/home_photo_1.jpg">
+                    <div class="overlay" style="background: #071f4e;">
+                        <div class="title">Education</div>
+                        <div class="desc">Vos dons permettent aux enfants de bénéficier d'une scolarité pour leur meilleur avenir</div>
+                        <div class="learn-more">
+                            <a class="learn-more-link">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 2 -->
+                <div class="card">
+                    <img src="images/home_photo_2.jpg">
+                    <div class="overlay" style="background: #773431;">
+                        <div class="title">Nutrition</div>
+                        <div class="desc">Nous agissions au quotidien pour permettre aux familles d'avoir accès à la nourriture</div>
+                        <div class="learn-more">
+                            <a class="learn-more-link">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image 3 -->
+                <div class="card">
+                    <img src="images/home_photo_3.jpg">
+                    <div class="overlay" style="background: #366651;">
+                        <div class="title">Santé</div>
+                        <div class="desc">Nous réhabilitons le dispensaire du village afin que tous puissent profiter de soins !</div>
+                        <div class="learn-more">
+                            <a class="learn-more-link">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    document.querySelectorAll('.learn-more-link').forEach(btn => {
+                        btn.addEventListener('click', () => { activateTab('history'); });
+                    });
+                </script>
+            </div>
+        </div>
+
+        <!-- Votre contribution -->
+
+        <div style="text-align: center;">
+            <p>
+                <div class="lorem-section-title">
+                    Votre contribution
+                </div>
+            </p>
+            <section style="font-family: 'Calibri Light', Calibri, sans-serif;
+                            font-size: 1.3em;
+                            text-align: left;
+                            line-height: 1.2;">
+                <p>
+                    Les ressources de l’association se composent :<br>
+                    &bull; Des cotisations de ses membres<br>
+                    &bull; Des dons<br>
+                    <br>
+                    Dans un premier temps l’argent récolté servira à :<br>
+                    - Payer les frais de scolarité de 60 enfants des villages d’AMBODIAFONTSY et de FALIARIVO<br>
+                    - Fournir des kits scolaires<br>
+                    - Fournir des packs alimentaires (riz, farine, sucre, lait, etc.)<br>
+                    - Fournir de la SPIRULINE<br>
+                </p>
+            </section>
+        </div>
+
+        <div class="long-btn">
+            <div class="home_right-arrow-btn_1">
+                <button class="btn-main">En savoir plus</button>
+            </div>
+            <div class="home_right-arrow-btn_1">
+                <button class="btn-arrow">
+                    <svg style="color: #ffffff;" role="img" aria-label="Right arrow outline">
+                        <use href="#arrow-right-stroke"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ================================================== History ================================================== -->
+    <div id="history" class="tab-content">
+        <div class="hero">
+            <img src="images/cover_history.jpg" alt="History cover" class="hero-img">
+            <div class="hero-overlay">
+                <h2 class="hero-text">Un peu d'histoire...</h2>
+            </div>
+        </div>
+        <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.25em;">
+            <p>Madagascar est la 4ème plus grande île au monde, sa superficie est égale à la France, la Belgique et le Luxembourg réunis.
+            Avec 32 millions d'habitants. Notre grande île est aussi la plus pauvre au monde.</p>
+            <p>En péril à cause du réchauffement climatique, les sécheresses et les cyclones se succèdent,
+            brûlant ou inondant les cutures. 90% de la population vit avec moins de 2 euros par jour et 1 million
+            d'enfants sont atteints de mal nutrition.</p>
+            <p>Pourtant, 80% des espèces végétales et 90% des espèces animales y sont endémiques ! Ce pays possède
+            une richesse pour le patrimoine mondial et reste pourtant en grande difficulté par le dérèglement climatique.</p>
+            <p>Alors que Madagascar n'émet que 0,2% de gaz à effet de serre dans le monde.</p>
+            <p>C'est pourquoi,
+            <br>désireux d'apporter la moindre aide, nous, ma tribu, quelques amis nés ou ayant
+            grandis à Madagascar, avons eu la volonté de créer l'association <b>ETSY BABEKO</b> pour la dignité des enfants
+            à Madagascar.</p>
+        </section>
+
+        <!--------------- "Etsy Babeko veut dire ; ..." --------------->
+
+        <style>
+            .babeko-wrapper {
+                display: flex;
+                align-items: center;    /* vertically center text with image */
+                gap: 0;                 /* no space between image and box */
+            }
+
+            .babeko-wrapper img {
+                max-width: 320px;       /* slightly bigger than before (~1.2x) */
+                width: 100%;
+                height: auto;           /* maintain aspect ratio */
+                /*border-radius: 8px;*/
+            }
+
+            .babeko-box {
+                background-color: #366651; /* green background */
+                color: white;
+                padding: 20px;
+                /*border-radius: 8px;*/
+                font-family: 'Calibri Light', Calibri, sans-serif;
+                font-size: 1.6em;         /* 0.8 times smaller than 1.8em */
+                font-style: italic;
+                font-weight: bold;
+                line-height: 1.5;
+                flex: 1;                    /* take remaining space next to image */
+                text-align: center;         /* center text horizontally */
+            }
+
+            /* Mobile → image on top */
+            @media (max-width: 768px) {
+                .babeko-wrapper {
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .babeko-wrapper img,
+                .babeko-box {
+                    width: 90%;               /* same width */
+                    max-width: 360px;         /* optional */
+                    margin: 0 auto;
+                    flex: unset;
+                }
+
+                .babeko-wrapper img {
+                    height: 300px;            /* fixed height for cropping */
+                    object-fit: cover;        /* crop image without distortion */
+                    display: block;
+                }
+            }
+        </style>
+
+        <div class="babeko-wrapper">
+            <img src="images/history_babeko.png" alt="Etsy Babeko image">
+            <div class="babeko-box">
+                <p>Etsy Babeko veut dire ;<br>
+                "viens, je te porte sur mon dos, à l'africaine, jusqu'à ce que tu marches seul."</p>
+            </div>
+        </div>
+
+
+        <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.3em;">
+            <p>Par le biais de notre famille sur place, nous sommes en relation avec l'église protestante FJKM Martiora d'Ambodiafontsy et sa voisine, l'église catholique "Sacré Coeur du Christ" à Faliarivo qui ont répertorié 60 enfants de familles très défavorisées auprès desquelles elles interviennent déjà avec leurs faibles moyens.</p>
+            <p>Notre association met tout en œuvre pour aider ces familles et les enfants de ces deux villages, situés à 9km de la capitale ; Antananarivo.</p>
+            <p>Afin de permettre à ces familles et leurs enfants, d'aspirer à une vie meilleure, nous comptons sur votre généreuse participation dans ce projet humanitaire.</p>
+        </section>
+
+        <!--------------- Button "Je souhaite contribuer !" --------------->
+
+        <style>
+            .history_contribute-btn,
+            .history_learn-more-btn {
+                background-color: #366651;  /* green background */
+                color: white;               /* text color */
+                border: 2px solid #366651;  /* border same as background initially */
+                padding: 10px 50px;
+                font-size: 1.4em;
+                font-family: 'Calibri Light', Calibri, sans-serif;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.4s ease;   /* smooth hover transition */
+            }
+
+            .history_contribute-btn:hover,
+            .history_learn-more-btn:hover {
+                background-color: white;    /* background turns white */
+                color: black;               /* text turns black */
+                border-color: black;        /* border becomes black */
+            }
+
+            /* Animation (desktop only) (>= 768px + 1px) */
+            @media (min-width: 769px) {
+                @keyframes scaleIn {
+                    from { opacity: 0; transform: scale(0.5); }
+                    to   { opacity: 1; transform: scale(1); }
+                }
+                .history_contribute-btn.animate,
+                .history_learn-more-btn.animate {
+                    animation: scaleIn 0.5s forwards;
+                }
+            }
+        </style>
+
+        <!-- <div style="text-align: center; margin-top: 25px;">
+            <button class="history_learn-more-btn">En savoir plus</button>
+        </div> -->
+        <div class="long-btn">
+            <div class="history_right-arrow-btn_1">
+                <button class="btn-main">En savoir plus</button>
+            </div>
+            <div class="history_right-arrow-btn_1">
+                <button class="btn-arrow">
+                    <svg style="color: #ffffff;" role="img" aria-label="Right arrow outline">
+                        <use href="#arrow-right-stroke"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <script>
+            // Only run on desktop
+            if (window.innerWidth >= 769) {
+                const element = document.querySelector('.history_contribute-btn');
+
+                // Set initial state for animation
+                element.style.opacity = 0;
+                element.style.transform = 'scale(0.5)';
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Add animation class
+                            entry.target.classList.add('animate');
+
+                            // Remove observer so it triggers only once per page load
+                            observer.unobserve(entry.target);
+
+                            // Ensure final state stays visible
+                            entry.target.style.opacity = 1;
+                            entry.target.style.transform = 'scale(1)';
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                observer.observe(element);
+            }
+        </script>
+    </div>
+    
+    <!-- ================================================== Actions ================================================== -->
+    <div id="actions" class="tab-content">
+        <div class="hero">
+            <img src="images/cover_actions.jpg" alt="Actions cover" class="hero-img">
+            <div class="hero-overlay">
+                <h2 class="hero-text">Nos actions</h2>
+            </div>
+        </div>
+        
+        <!-- Grâce à vous nous pourrons... -->
+        <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.2em; text-align: center;">
+            <h2 class="lorem-section-title">
+                Grâce à vous nous pourrons...
+            </h2>
+            <p style="margin: 0.4em 0;">Lutter contre la mal nutrition</p>
+            <p style="margin: 0.4em 0;">Offrir des fournitures scolaires et un accès à l'éducation aux enfants</p>
+            <p style="margin: 0.4em 0;">Distribuer des vêtements et des ressources alimentaires aux familles</p>
+            <p style="margin: 0.4em 0;">Organiser des activités extra-scolaires ludiques et axées sur le développement personnel</p>
+        </section>
+
+        <!-- Pour les enfants ... | Pour les enfants ... | Pour les enfants ... -->
+
+        <div class="age-groups-container">
+            <style>
+                .age-groups-container {
+                    display: flex;
+                    flex-direction: column; /* default: stacked for mobile */
+                    align-items: center;
+                    gap: 2rem;
+                }
+                .age-group {
+                    text-align: center;
+                    max-width: 300px; /* optional: keep content neat */
+                    line-height: 1.1;;
+                }
+                .age-img {
+                    width: 130px;
+                    height: 130px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    margin-bottom: 1.5rem;
+                }
+                /* Desktop (>= 768px + 1px) */
+                @media (min-width: 769px) {
+                    .age-groups-container {
+                        flex-direction: row;
+                        justify-content: center;
+                        align-items: flex-start;
+                        gap: 3rem;
+                    }
+                }
+            </style>
+
+            <div class="age-group">
+                <img src="images/kids_4to7.jpg" alt="Enfants de 4 à 7 ans" class="age-img">
+                <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.1em;">
+                    <p><strong>Pour les enfants de 4 à 7 ans</strong></p>
+                    <p style="margin: 0.4em 0;">- Paiement des frais d'inscription</p>
+                    <p style="margin: 0.4em 0;">- Distribution de kit scolaire</p>
+                    <p style="margin: 0.4em 0;">- Distribution de pack alimentaire</p>
+                    <p style="margin: 0.4em 0;">- Création et gestion d'un potager collectif</p>
+                </section>
+            </div>
+
+            <div class="age-group">
+                <img src="images/kids_8to11.jpg" alt="Enfants de 8 à 11 ans" class="age-img">
+                <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.1em;">
+                    <p><strong>Pour les enfants de 8 à 11 ans</strong></p>
+                    <p style="margin: 0.4em 0;">- Paiement des frais d'inscription</p>
+                    <p style="margin: 0.4em 0;">- Distribution de kit scolaire</p>
+                    <p style="margin: 0.4em 0;">- Distribution de pack alimentaire</p>
+                    <p style="margin: 0.4em 0;">- Organiser des activités de reboisement</p>
+                    <p style="margin: 0.4em 0;">- Initiation et découverte de la biodiversité du pays</p>
+                </section>
+            </div>
+
+            <div class="age-group">
+                <img src="images/kids_12to15.jpg" alt="Enfants de 12 à 15 ans" class="age-img">
+                <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.1em;">
+                    <p><strong>Pour les enfants de 12 à 15 ans</strong></p>
+                    <p style="margin: 0.4em 0;">- Paiement des frais d'inscription</p>
+                    <p style="margin: 0.4em 0;">- Distribution de kit scolaire</p>
+                    <p style="margin: 0.4em 0;">- Distribution de pack alimentaire</p>
+                    <p style="margin: 0.4em 0;">- Organiser des activités de reboisement</p>
+                    <p style="margin: 0.4em 0;">- Aide et accompagnement dans la recherche d'apprentissage ou de stage pour ceux qui n'auront pas la possibilité de faire des études longues</p>
+                </section>
+            </div>
+        </div>
+
+        <!-- Nos engagements -->
+        <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.1em;">
+            <h2 class="lorem-section-title">
+                Nos engagements
+            </h2>
+
+            <p>Chers(es) amis(es), notre première action, que j’assurerai en votre NOM sur le terrain sera de :</p>
+
+            <p>
+                <strong>Faire les rentrées scolaires :</strong><br>
+                - Inscriptions estimées à +- 20 euros par enfant.<br>
+                - Kits scolaires estimés à +- 15 euros par enfant.
+            </p>
+
+            <p>
+                <strong>Prévoir une distribution de packs alimentaires :</strong><br>
+                Les packs seront constitués en fonction de l'âge et des besoins alimentaires de chaque enfants et sont estimés à +- 10 euros par enfant (riz, farine, lait, sucre, huile, savon). <strong>Nous serons donc aux côtés et accompagnerons 60 enfants de familles les plus défavorisées !</strong>
+            </p>
+
+            <p>
+                <strong>Pour les parents ; nous organiserons des ateliers de couture et de cuisine :</strong><br>
+                Les ateliers de cuisine, pour améliorer la qualité de vie des familles.<br>
+                Et les ateliers de coutures, permettront de gagner un revenu supplémentaire grâce à la vente des objets fabriqués.<br>
+            </p>
+
+            <p>Toutes nos actions seront faites conjointement avec les églises protestantes et catholiques qui connaissent les familles et interviennent déjà sur place</p>
+        </section>
+
+        <!---------- 3D Carousel ---------->
+
+        <style>
+            /*_/--------------------------------------------------\_*/
+            .carousel-container {
+                display: flex;               /* makes it behave like a normal block */
+                justify-content: center;     /* horizontal centering */
+                margin: 4rem auto;           /* big top/bottom margin – you can adjust */
+                padding: 2rem 0;             /* optional extra breathing room */
+                perspective: 1000px;
+
+                margin-top: -17em;
+                margin-bottom: 14em;
+                pointer-events: none;
+            }
+            @media (min-width: 769px) { /* Desktop (>= 768px + 1px) */
+                .carousel-container {
+                    transform: scale(1.5);
+                }
+            }
+            @media (max-width: 768px) { /* Mobile (<= 768px) */
+                .carousel-container {
+                    transform: scale(0.6);
+                    margin-bottom: 1em;
+                }
+            }
+            .carousel-container .item {
+                pointer-events: auto;
+            }
+            .carousel-container .item img {
+                pointer-events: auto;
+            }
+            /* \--------------------------------------------------/ */
+ 
+            .carousel {
+                width: 25em;
+                height: 25em;
+                position: relative;
+                transform-style: preserve-3d;
+            }
+            /* Prevent accidental text/image selection */
+            .carousel, 
+            .carousel * {
+                user-select: none;         /* Standard browsers */
+                -webkit-user-select: none; /* Safari */
+                -moz-user-select: none;    /* Firefox */
+                -ms-user-select: none;     /* IE/Edge */
+            }
+
+            /* Each image wrapper rotates around circle */
+            .item {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform-style: preserve-3d;
+            }
+
+            /* Actual image stays facing the camera */
+            .item img {
+                max-width: 15em;
+                max-height: 10em;
+                transform-style: preserve-3d;
+                transform: translate(-50%, -50%);
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                object-fit: contain;
+            }
+
+            /*_/--------------------------------------------------\_*/
+            /* Debug panel */
+            .debug {
+                display: none;
+                
+                /*position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0,0,0,0.1);
+                padding: 10px;
+                display: flex;
+                gap: 1em;
+                justify-content: center;
+                backdrop-filter: blur(8px);
+                flex-wrap: wrap;*/
+            }
+            /* \--------------------------------------------------/ */
+
+            .value-container {
+                display: flex;
+                align-items: center;
+                gap: 0.5em;
+            }
+        </style>
+
+        <!-- _/--------------------------------------------------\_ -->
+        <div class="carousel-container">
+            <div class="carousel">
+                <!-- wrappers will be created in JS -->
+            </div>
+        </div>
+        <!--  \--------------------------------------------------/  -->
+
+        <div class="debug">
+            <div class="value-container">
+                <label>Value:</label>
+                <span id="valDisplay">0.0000</span>
+            </div>
+            <div class="buttons-container" id="buttons"></div>
+            <div class="value-container">
+                <label>Debug:</label>
+                <span id="debugOutput">None</span>
+            </div>
+        </div>
+
+        <script>
+            const carousel = document.querySelector('.carousel');
+            const imageList = [
+                "images/Photos-Mars-2025/_photo_1.jpeg",
+                "images/Photos-Mars-2025/_photo_2.jpeg",
+                "images/Photos-Mars-2025/_photo_3.jpeg",
+                "images/Photos-Mars-2025/_photo_4.jpeg",
+                "images/Photos-Mars-2025/_photo_5.jpeg",
+                "images/Photos-Mars-2025/_photo_6.jpeg",
+                "images/Photos-Mars-2025/_photo_7.jpeg",
+                "images/Photos-Mars-2025/_photo_8.png",
+            ];
+
+            // create wrappers so images can face camera
+            imageList.forEach(src => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "item";
+
+                const img = document.createElement("img");
+                img.src = src;
+                wrapper.appendChild(img);
+                carousel.appendChild(wrapper);
+            });
+
+            const items = document.querySelectorAll('.item');
+            const total = items.length;
+            const radius = 20; // circle radius in em
+
+            // --- Attach click listener to each item (runs once) ---
+            items.forEach((item, index) => {
+                item.addEventListener("click", () => {
+                    let i = total - index;
+                    animateTo(i);
+                    debugOutput.textContent = `Clicked index: ${i}`;
+                });
+            });
+
+            let currentVal = 0; // continuous numeric value
+
+            function placeItems_perFrame(globalRotationDeg = 0) {
+                items.forEach((item, i) => {
+                    const angle = (360 / total) * i + globalRotationDeg;
+                    const rad = angle * Math.PI / 180;
+
+                    const x = Math.sin(rad) * radius;
+                    const z = Math.cos(rad) * radius;
+
+                    // wrapper rotates around circle
+                    item.style.transform =
+                        `translate3d(${x}em, 4em, ${-z}em) rotateY(${angle}deg)`;
+
+                    // image faces camera
+                    const img = item.children[0];
+                    img.style.transform =
+                        `translate(-50%, -10%) rotateY(${-angle}deg)`;
+
+                    // -------------------------------
+                    // OPACITY BASED ON Z DISTANCE
+                    // z ranges approx from -radius (front) to +radius (back)
+                    // Normalize to 0..1
+                    const normalized = (z + radius) / (2 * radius);
+
+                    // compute final opacity
+                    // back image ~= 0.2, front image = 1
+                    const opacity = 1 - normalized * 0.8;
+
+                    img.style.opacity = opacity.toFixed(2);
+                    // -------------------------------
+                });
+            }
+
+
+            const valDisplay  = document.getElementById("valDisplay");
+            const debugOutput = document.getElementById("debugOutput");
+
+            const anglePerImage = 360 / imageList.length;
+
+            function update() {
+                valDisplay.textContent = currentVal.toFixed(4);
+                const rotation = currentVal * anglePerImage + 180;
+                placeItems_perFrame(rotation);
+            }
+
+            placeItems_perFrame();
+
+            // --- Animation Logic ---
+            let animationId = null;
+
+            function animateTo(targetIndex) {
+                // Based on code from Gemini
+                
+                // Calculate the raw difference relative to the current modulus
+                // logic: target - (current % total) gives distance within one cycle
+                // We use a helper to get a positive modulo for safety
+                const mod = (n, m) => ((n % m) + m) % m;
+                const currentMod = mod(currentVal, total);
+
+                let diff = targetIndex - currentMod;
+
+                // Shortest Path Logic (The "Wrap Around")
+                // If distance is greater than half the circle, go the other way
+                if (diff > total / 2) {
+                    diff -= total;
+                } else if (diff < -total / 2) {
+                    diff += total;
+                }
+
+                // Calculate final destination value
+                const startVal = currentVal;
+                const endVal = currentVal + diff;
+
+                // Animation Loop (Custom implementation for total control)
+                const duration = 600; // ms
+                const startTime = performance.now();
+
+                if (animationId) cancelAnimationFrame(animationId);
+
+                function frame(time) {
+                    const elapsed = time - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Cubic Ease Out function: 1 - (1-t)^3
+                    // Feels snappier than linear, similar to glassmorphism physics
+                    const ease = 1 - Math.pow(1 - progress, 3);
+
+                    currentVal = startVal + (diff * ease);
+
+                    update(); // Update the DOM
+
+                    if (progress < 1) {
+                        animationId = requestAnimationFrame(frame);
+                    }
+                }
+
+                animationId = requestAnimationFrame(frame);
+            }
+
+            let mouseInsideCarousel = false; // FIXME: There's a bug — there's an invisible box.
+            // Detect when mouse enters the carousel area
+            carousel.addEventListener("mouseenter", () => {
+                mouseInsideCarousel = true;
+                debugOutput.textContent = "Mouse inside carousel";
+            });
+            // Detect when mouse leaves the carousel area
+            carousel.addEventListener("mouseleave", () => {
+                mouseInsideCarousel = false;
+                debugOutput.textContent = "Mouse outside carousel";
+            });
+
+            // --- Auto-switch to lower index every 3 seconds ---
+            setInterval(() => {
+                // current index modulo total
+                const currentIndex = Math.round(currentVal) % total;
+
+                // next index = one lower, wrap around
+                let nextIndex = currentIndex - 1;
+                if (nextIndex < 0) nextIndex += total;
+
+                if (!mouseInsideCarousel) {
+                    animateTo(nextIndex);
+                }
+            }, 3000);
+
+            // --- Create debug buttons for each image ---
+            const buttonsContainer = document.getElementById("buttons");
+            imageList.forEach((_, index) => {
+                const btn = document.createElement("button");
+                btn.textContent = index;
+                btn.onclick = () => animateTo(index);
+                buttonsContainer.appendChild(btn);
+            });
+        </script>
+
+        <!---------- Suivez nos aventures sur les réseaux sociaux ! ---------->
+        <div style="text-align: center; padding: 2rem;">
+            <div style="
+                font-family: 'Calibri Light', Calibri, sans-serif;
+                font-weight: bold;
+                font-style: italic;
+                font-size: 1.8em;
+                line-height: 1.4;
+                
+                display: inline-flex;       /* keeps everything on one line */
+                align-items: center;        /* <-- perfect vertical centering */
+                justify-content: center;   /* horizontal center inside inline-flex */
+                gap: 18px;                  /* <-- beautiful space between text and icon (change this number if you want more/less) */
+                flex-wrap: wrap;
+            ">
+                <span>Suivez nos aventures sur les réseaux sociaux !</span>
+                <img src="images/gemini-fb-logo.png" class="facebook-anywhere"
+                    alt="Facebook"
+                    width="40"
+                    height="40"
+                    style="margin-right: 6px;">
+            </div>
+        </div>
+
+        <style>
+            .dear-friends {
+                display: flex;
+                align-items: center;    /* vertically center text with image */
+
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .dear-friends-box {
+                background-color: #366651; /* green background */
+                color: white;
+                padding: 20px 40px;
+                font-family: 'Calibri Light', Calibri, sans-serif;
+                font-size: 1.44em;         /* 0.8 times smaller than 1.8em */
+                line-height: 1.5;
+                flex: 1;                    /* take remaining space next to image */
+                text-align: left;
+            }
+
+            /* ------- Desktop (>= 768px + 1px) ------- */
+            @media (min-width: 769px) {
+                .img_desktop { display: block; }
+                .img_mobile  { display: none; }
+
+                .img_desktop {
+                    z-index: 10;
+                }
+                .dear-friends-box {
+                    z-index: 1;                    
+                    padding-top: 40px;
+                    padding-bottom: 40px;
+                    padding-left: 130px;
+                }
+
+                /* Animation */
+                @keyframes slideToLeft  {
+                    from { opacity: 0; transform: translateX(180px); }
+                    to   { opacity: 1; transform: translateX(30px);  }
+                }
+                @keyframes slideToRight {
+                    from { opacity: 0; transform: translateX(-200px); }
+                    to   { opacity: 1; transform: translateX(-30px);  }
+                }
+                .img_desktop.animate {
+                    animation: slideToLeft 1.4s ease-out 0.2s forwards;
+                }
+                .dear-friends-box.animate {
+                    animation: slideToRight 1.4s ease-out forwards;                    
+                }
+            }
+
+            /* ------- Mobile (<= 768px) ------- */
+            @media (max-width: 768px) {
+                .dear-friends {
+                    margin-top: -1em;
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+                .img_desktop { display: none; }
+                .img_mobile  { display: block; }
+
+                .img_mobile {
+                    width: 100%;
+                    max-width: none;
+                    height: auto;
+                    margin: 0 auto 20px auto;
+                }
+                .dear-friends-box {
+                    padding: 20px 20px 20px 20px;   /* space for image on top */
+                    text-align: center;
+                }
+            }
+        </style>
+
+        <div class="dear-friends">
+            <img class="img_desktop" src="images/actions_lalou.jpg"><br>
+
+            <div class="dear-friends-box">
+                <span style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+                    Lalou RAJOELISOLO<br>
+                </span>
+                
+                <img class="img_mobile" src="images/actions_lalou.jpg">
+
+                <span style="font-family: 'Calibri Light', Calibri, sans-serif;">
+                    Présidente et fondatrice d'ETSY BABEKO<br>
+                </span>
+                <p style="font-weight: bold; font-style: italic; font-size: 0.8em;">
+                    "Chers amis, ce projet humanitaire se concrétisera seulement avec votre générosité. Les enfants notre association ETSY BABEKO vous remercient d'avance, nous vous disons à bientôt !"
+                </p>
+            </div>
+        </div>
+
+        <div class="long-btn">
+            <div class="actions_right-arrow-btn_1">
+                <button class="btn-main">Je souhaite contribuer</button>
+            </div>
+            <div class="actions_right-arrow-btn_1">
+                <button class="btn-arrow">
+                    <svg style="color: #ffffff;" role="img" aria-label="Right arrow outline">
+                        <use href="#arrow-right-stroke"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <script>
+            // Only run on desktop
+            if (window.innerWidth >= 769) {
+                const element1 = document.querySelector('.img_desktop');
+                const element2 = document.querySelector('.dear-friends-box');
+
+                // Set initial state for animation
+                element1.style.opacity = 0;
+                element1.style.transform = 'translateX(180px)';
+                element2.style.opacity = 0;
+                element2.style.transform = 'translateX(-200px)';
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Add animation class
+                            entry.target.classList.add('animate');
+
+                            // Remove observer so it triggers only once per page load
+                            observer.unobserve(entry.target);
+
+                            // Ensure final state stays visible
+                            entry.target.style.opacity = 1;
+                            entry.target.style.transform = 'scale(1)';
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                observer.observe(element1);
+                observer.observe(element2);
+            }
+        </script>
+    </div>
+    
+    <!-- ================================================== Contribute ================================================== -->
+    <div id="contribute" class="tab-content">
+        <div class="hero">
+            <img src="images/cover_contribute.jpg" alt="Contribute cover" class="hero-img">
+            <div class="hero-overlay">
+                <h2 class="hero-text">Agir avec nous, pour eux !</h2>
+            </div>
+        </div>
+
+        <!-- Vous souhaitez prendre part à l'aventure ... -->
+        <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.1em;">
+            <p style="text-align: center;">
+                <b style="font-size: 1.1em;"><i>Vous souhaitez prendre part à l'aventure et rejoindre notre cause? Voici différentes façons de nous aider !</i></b>
+            </p>
+        </section>
+
+        <section class="lorem-section" style="font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.1em;">
+            <style>
+                .mini-title {
+                    font-size: 1.4em;
+                    font-weight: bold;
+                    display: inline-block;
+                    margin-bottom: 4px;
+                }
+
+                .pdf-link {
+                    color: inherit;
+                    cursor: pointer;
+                }
+
+                #copyButton {
+                    background-color: #C0C0C0;
+                    border: none;
+                    border-radius: 6px;
+                    margin-left: 10px;
+                    padding: 8px 16px;
+                    cursor: pointer;
+                    font-weight: bold;
+                    box-shadow: none;
+                }
+
+                #copyButton:hover {
+                    background-color: #A9A9A9; /* darker gray on hover */
+                }
+            </style>
+
+            <!-- Je deviens membre -->
+            <p>
+                <strong class="mini-title">Je deviens membre</strong><br>
+                Payer une cotisation annuelle de 30 euros, qui servira aux frais de fonctionnement de l'association.<br>
+                Ceci dans le but de ne pas amputer les dons destinés aux enfants.<br>
+            </p>
+
+            <!-- Je parraine un enfant -->
+            <p>
+                <strong class="mini-title">Je parraine un enfant</strong><br>
+                Parrainer un enfant, être membre actif de l'association, vous permet de contribuer à ses frais de scolarité et lui donner accès aux activités.<br>
+                En passant par les responsables de l'association, vous pourrez avoir des nouvelles des enfants.<br>
+            </p>
+            <p style="text-align: center;">
+                <strong>Pour <a class="pdf-link" target="_blank">devenir membre</a> ou <a class="pdf-link" target="_blank">parrainer un enfant</a>, téléchargez notre bulletin d'adhésion ci-dessous à nous retourner par mail ou par voie postale.<br>
+                <a class="pdf-link" target="_blank">Bulletin d'adhésion</a>.</strong>
+            </p>
+
+            <!-- Je fais un don -->
+            <p>
+                <strong class="mini-title">Je fais un don</strong><br>
+                Ponctuel ou régulier, selon votre choix, votre générosité sera utile pour offrir aux enfants tout ce dont ils ont besoin!<br>
+            </p>
+
+            <!-- Center these 2 paragraphs -->
+            <p style="text-align: center;">
+                <br>
+                Pour les paiements par chèque, veuillez nous adresser un chèque à l'ordre "Etsy Babeko"<br>
+                à l'adresse suivante : 2 Rue Adolphe Thiers 13001, Marseille.<br>
+            </p>
+            <p style="text-align: center;">
+                Pour les virements bancaires veuillez copier notre IBAN ci-dessous.<br>
+                <strong><p style="font-size: 1.35em; text-align: center;">IBAN</strong>
+                
+                <button id="copyButton">Copier</button>
+            </p>
+
+            <p id="ibanText" style="text-align: center;">
+                <strong>
+                C/C Eurocompte Asso Confort<br>
+                ETSY BABEKO POUR LA DIGNITE DES<br>
+                RIB<br>
+                10278 08971 00021266201 82<br>
+                IBAN<br>
+                FR76 1027 8089 7100 0212 6620 182<br>
+                BIC<br>
+                CMCIFR2A<br>
+                </strong>
+            </p>
+
+            <script>
+                const href_file = "docs/Bulletin adhesion final.pdf";
+                document.querySelectorAll(".pdf-link").forEach(a => a.href = href_file);
+
+                // IBAN
+                const copyButton = document.getElementById('copyButton');
+                const ibanElement = document.getElementById('ibanText');
+
+                copyButton.addEventListener('click', () => {
+                    // Create a temporary selection
+                    const range = document.createRange();
+                    range.selectNodeContents(ibanElement);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+
+                    try {
+                        document.execCommand('copy'); // Copy selected text
+                        selection.removeAllRanges();  // Clear selection
+                        copyButton.textContent = 'Copié !';
+                        setTimeout(() => copyButton.textContent = 'Copier', 2000);
+                    } catch (err) {
+                        alert('Erreur lors de la copie : ' + err);
+                    }
+                });
+            </script>
+        </section>
+    </div>
+</main>
+
+
+<!--================================================================================================
+Footer
+=================================================================================================-->
+
+<!-- ======================================================== Contact ======================================================== -->
+
+<footer>
+    <style>
+        footer {
+            background-color: #366651;
+            color: white;
+            padding: 0em 3em;
+            padding-bottom: 2em;
+            text-align: left;
+            border-top: 1px solid #ddd;
+        }
+
+        .contact-wrapper {
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .contact-items {
+            display: grid;
+            grid-auto-flow: column; /* forces left-to-right */
+            gap: 1em;
+            justify-content: start; /* align to the left */
+            padding-left: 20px;
+        }
+        .contact-item {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+    
+        /* Custom widths */
+        .w-social  { width: 4em; }
+        .w-email   { width: 20em; }
+        .w-phone   { width: 10em; }
+        .w-address { width: 20em; }
+
+        .contact-label {
+            display: flex;
+            align-items: center;
+            /*font-weight: bold;*/
+            margin-bottom: 0.25em;
+        }
+        .contact-value {
+            font-weight: normal;
+            font-family: 'Calibri Light', Calibri, sans-serif; font-size: 1.25em;
+        }
+
+        /* Mobile: stack vertically */
+        @media (max-width: 900px) {
+            .contact-title {
+                text-align: center;
+            }
+            .contact-items {
+                grid-auto-flow: row;
+                padding-left: 0;
+                justify-content: center;
+            }
+            .contact-item {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+                text-align: center;
+            }
+            .contact-label,
+            .contact-value {
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <p class="contact-title"><strong style="font-size: 2.3em">Nous contacter</strong></p>
+
+    <div class="contact-items">
+        <!-- Social -->
+        <div class="contact-item w-social">
+            <div class="contact-label">
+                <img src="images/gemini-fb-logo.png" class="facebook-anywhere"
+                    alt="Facebook"
+                    width="40"
+                    height="40"
+                    style="margin-right: 6px;">
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div class="contact-item w-email">
+            <div class="contact-label">
+                <svg class="icon" viewBox="0 0 24 24" fill="white" width="16" height="16">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+                E-mail
+            </div>
+            <div class="contact-value">
+                <a href="mailto:association.etsybabeko@gmail.com?subject=Demande%20de%20renseignement" class="email-link" style="color: white;">
+                    association.etsybabeko@gmail.com
+                </a>
+            </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="contact-item w-phone">
+            <div class="contact-label">
+                <svg class="icon" viewBox="0 0 24 24" fill="white" width="16" height="16">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                </svg>
+                Téléphone
+            </div>
+            <div class="contact-value">
+                <a href="tel:0682314305" style="color: white;">06 82 31 43 05</a>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="contact-item w-address">
+            <div class="contact-label">
+                <svg class="icon" viewBox="0 0 24 24" fill="white" width="16" height="16">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                Adresse
+            </div>
+            <div class="contact-value">
+                <a href="https://www.google.com/maps/dir/43.2989698,5.3851055/2+Rue+Adolphe+Thiers,+13001+Marseille,+France/@43.2989284,5.3830008,17z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x12c9c0a2907c3dfd:0x2ee4fda640ea185c!2m2!1d5.3851519!2d43.298775" target="_blank" style="color: white;">
+                    2 Rue Adolphe Thiers 13001 Marseille
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- ======================================================== Secondary Footer ======================================================== -->
+
+<footer class="secondary-footer">
+    <style>
+        .secondary-footer {
+            background-color: white;
+            padding: 1rem 3rem;
+            border-top: 0.4em solid #ddd;
+
+            /* Main flex container */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            min-height: 8rem;
+        }
+
+        /* Big spring on both sides */
+        .spring_in {
+            flex: 2 1 0;                          /* this creates the long invisible springs */
+            min-width: 20px;                      /* prevents total collapse on very small screens */
+        }
+        .spring_out {
+            flex: 1.5 1 0;                          /* this creates the long invisible springs */
+            min-width: 20px;                      /* prevents total collapse on very small screens */
+        }
+
+        .footer-logo-wrapper {
+            flex: 0 0 auto;
+        }
+
+        .footer-logo {
+            height: 5.5em;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain; /* guarantees perfect aspect ratio even if container constrains it */
+        }
+
+        /* Center text – perfectly centered */
+        .footer-text {
+            flex: 0 0 auto;
+            text-align: center;
+            font-family: 'Calibri Light', Calibri, sans-serif;
+            font-size: 1em;
+            line-height: 1.6;
+            color: black;
+            white-space: nowrap;                 /* prevents text from breaking too early */
+        }
+
+        .footer-text a {
+            color: black;
+            text-decoration: underline;
+        }
+    </style>
+
+    <div class="spring_out"></div>
+    <div>
+        <img src="images/logo_2022-08-28.png" alt="Association ETSY BABEKO Logo" class="footer-logo">
+    </div>
+    <div class="spring_in"></div>
+    <div class="footer-text">
+        Association Etsy Babeko<br>
+        Développé par Manda Rajoelisolo<br>
+    </div>
+    <div class="spring_in"></div>
+    <div>
+        <img src="images/logo_2022-08-28.png" alt="Association ETSY BABEKO Logo" class="footer-logo">
+    </div>
+    <div class="spring_out"></div>
+</footer>
+
+
+<!--================================================================================================
+Script
+=================================================================================================-->
+
+<script src="js/script.js"></script>
+
+
+</body>
+</html>
